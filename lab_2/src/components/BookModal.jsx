@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./Book_Form.css";
 
-function BookModal({ onAddBook }) {
+function BookModal({ onAddBook, editingBook, onUpdateBook, onCancelEdit }) {
     const modalRef = useRef();
     const [formData, setFormData] = useState({
         title: "",
@@ -13,12 +13,42 @@ function BookModal({ onAddBook }) {
         image: "",
     });
 
+    const isEditMode = editingBook !== null;
+
+    // Open modal when editingBook changes
+    useEffect(() => {
+        if (editingBook) {
+            setFormData({
+                title: editingBook.title || "",
+                author: editingBook.author || "",
+                publisher: editingBook.publisher || "",
+                year: editingBook.year || "",
+                language: editingBook.language || "",
+                pages: editingBook.pages || "",
+                image: editingBook.image || "",
+            });
+            modalRef.current.showModal();
+        }
+    }, [editingBook]);
+
     function openModal() {
         modalRef.current.showModal();
     }
 
     function closeModal() {
         modalRef.current.close();
+        setFormData({
+            title: "",
+            author: "",
+            publisher: "",
+            year: "",
+            language: "",
+            pages: "",
+            image: "",
+        });
+        if (isEditMode && onCancelEdit) {
+            onCancelEdit();
+        }
     }
 
     function handleChange(e) {
@@ -28,7 +58,13 @@ function BookModal({ onAddBook }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (onAddBook) onAddBook(formData); // send data to App.jsx
+        
+        if (isEditMode) {
+            if (onUpdateBook) onUpdateBook(formData);
+        } else {
+            if (onAddBook) onAddBook(formData);
+        }
+        
         setFormData({
             title: "",
             author: "",
@@ -43,12 +79,11 @@ function BookModal({ onAddBook }) {
 
     return (
         <>
-
             <button onClick={openModal} className="book-header">+</button>
 
             <dialog ref={modalRef} className="book-modal">
                 <div className="form-container">
-                    <h2>Add Book</h2>
+                    <h2>{isEditMode ? "Edit Book" : "Add Book"}</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-control">
                             <label>Title</label>
@@ -58,7 +93,6 @@ function BookModal({ onAddBook }) {
                                 placeholder="Book title..."
                                 value={formData.title}
                                 onChange={handleChange}
-                                
                             />
                         </div>
 
@@ -70,11 +104,10 @@ function BookModal({ onAddBook }) {
                                 placeholder="Author"
                                 value={formData.author}
                                 onChange={handleChange}
-                                
                             />
                         </div>
 
-                         <div className="form-control">
+                        <div className="form-control">
                             <label>Publisher</label>
                             <input
                                 name="publisher"
@@ -85,8 +118,7 @@ function BookModal({ onAddBook }) {
                             />
                         </div>
 
-
-                         <div className="form-control">
+                        <div className="form-control">
                             <label>Publication Year</label>
                             <input
                                 name="year"
@@ -95,7 +127,6 @@ function BookModal({ onAddBook }) {
                                 onChange={handleChange}
                             />
                         </div>
-
 
                         <div className="form-control">
                             <label>Language</label>
@@ -119,7 +150,7 @@ function BookModal({ onAddBook }) {
                         </div>
 
                         <div className="form-control">
-                            <label>URL (book cover) </label>
+                            <label>URL (book cover)</label>
                             <input
                                 name="image"
                                 type="text"
@@ -131,7 +162,7 @@ function BookModal({ onAddBook }) {
 
                         <div className="form-buttons">
                             <button type="submit" className="save_button">
-                                Save
+                                {isEditMode ? "Update" : "Save"}
                             </button>
                             <button
                                 type="button"
