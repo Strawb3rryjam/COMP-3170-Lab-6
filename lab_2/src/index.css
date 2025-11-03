@@ -149,6 +149,17 @@ html, body {
     transition: opacity 0.2s ease;
 }
 
+.primary {
+      display: inline-block;
+    padding: .5em 1.5em;
+    text-transform: uppercase;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f8b3b8;
+    color:#e34a35;
+    font-weight: 500;
+  }
+
 .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -232,3 +243,21 @@ html, body {
   color: #777;
   width: 100%;
 }
+
+.loan-form{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 10px;
+}
+
+.loan-card{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 10px;
+}
+
+
+
+

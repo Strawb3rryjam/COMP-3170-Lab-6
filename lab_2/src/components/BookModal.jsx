@@ -93,6 +93,7 @@ function BookModal({ onAddBook, editingBook, onUpdateBook, onCancelEdit }) {
                                 placeholder="Book title..."
                                 value={formData.title}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
 
@@ -104,6 +105,7 @@ function BookModal({ onAddBook, editingBook, onUpdateBook, onCancelEdit }) {
                                 placeholder="Author"
                                 value={formData.author}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
 
